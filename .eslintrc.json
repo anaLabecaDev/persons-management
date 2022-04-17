@@ -1,0 +1,103 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": [
+    "plugin:react/recommended",
+    "airbnb",
+    "prettier",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:testing-library/react"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "plugins": ["react", "@typescript-eslint", "react-hooks", "testing-library", "prettier"],
+  "rules": {
+    "prettier/prettier": [
+      "warn",
+      {
+        "tabWidth": 2,
+        "semi": true,
+        "singleQuote": true,
+        "printWidth": 120
+      }
+    ],
+    // Solves: Missing file extension ‘tsx’
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ],
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": ["**/*.test.{ts,tsx}", "**/{test,mockServer}/*.{ts,tsx}", "**/*.stories.{ts,tsx}"]
+      }
+    ],
+    "import/prefer-default-export": "off",
+    // Solves: JSX not allowed in files with extension ‘.tsx’
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
+    // React
+    "react/prop-types": "off",
+    "react/require-default-props": "off",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "react/jsx-props-no-spreading": [
+      "error",
+      {
+        "explicitSpread": "enforce",
+        "html": "enforce",
+        "custom": "ignore",
+        "exceptions": [""]
+      }
+    ],
+    // https://redux-toolkit.js.org/usage/immer-reducers#linting-state-mutations
+    "no-param-reassign": ["error", { "props": true, "ignorePropertyModificationsFor": ["state"] }],
+    "react/jsx-no-useless-fragment": ["error", { "allowExpressions": true }]
+  },
+  // Solves Unable to resolve path to module ‘./App’
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".ts", ".tsx", ".js", ".jsx", ".native.js"]
+      }
+    }
+  },
+  "overrides": [
+    {
+      "files": ["*.js"],
+      "rules": {
+        "@typescript-eslint/no-var-requires": "off"
+      }
+    },
+    /**
+     * React testing library - specific rules
+     */
+    {
+      "files": ["**/__tests__/**/*.[jt]s?(x)", "**/?(*.)+(spec|test).[jt]s?(x)"],
+      "extends": ["plugin:testing-library/react"],
+      "rules": {
+        "testing-library/no-await-sync-events": "error",
+        "testing-library/no-manual-cleanup": "error",
+        "testing-library/no-wait-for-empty-callback": "error",
+        "testing-library/prefer-explicit-assert": "error",
+        "testing-library/prefer-find-by": "error",
+        "testing-library/prefer-presence-queries": "error",
+        "testing-library/prefer-screen-queries": "error",
+        "testing-library/prefer-wait-for": "error"
+      }
+    }
+  ]
+}
