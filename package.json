@@ -14,6 +14,7 @@
     "@types/node": "^16.11.27",
     "@types/react": "^18.0.5",
     "@types/react-dom": "^18.0.1",
+    "axios": "^0.26.1",
     "devmoji": "^2.3.0",
     "framer-motion": "^6.3.0",
     "react": "^18.0.0",
