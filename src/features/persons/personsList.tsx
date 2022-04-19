@@ -1,19 +1,43 @@
 import React from 'react';
 import { useQuery } from 'react-query';
-import { Avatar, Flex, Box, Text, Heading, InputGroup, InputLeftElement, Input, VStack, Icon } from '@chakra-ui/react';
+import {
+  Avatar,
+  Flex,
+  Box,
+  Text,
+  Heading,
+  InputGroup,
+  InputLeftElement,
+  Input,
+  VStack,
+  Icon,
+  useDisclosure,
+} from '@chakra-ui/react';
 import { MdSearch, MdDomain } from 'react-icons/md';
 import PersonService from '../../api/personService';
 import { Person } from '../../api/types';
+import PersonDetailModal from './personDetail';
 
 function Header() {
   return (
-    <Flex justifyContent="space-between" alignItems="center" borderBottomWidth="1px" borderBottomColor="grey.500" p={4}>
-      <Heading size="md" color="blackAlpha.800">
-        Peoples List
+    <Flex
+      width="100%"
+      justifyContent="space-between"
+      alignItems="center"
+      borderBottomWidth="1px"
+      borderBottomColor="grey.500"
+      p={4}
+      position="fixed"
+      zIndex="sticky"
+      bg="white"
+    >
+      <Heading size="sm" color="blackAlpha.800">
+        People&apos;s List
       </Heading>
-      <InputGroup border={0} maxW="sm">
-        {/* eslint-disable-next-line react/no-children-prop */}
-        <InputLeftElement pointerEvents="none" children={<Icon as={MdSearch} />} width="4.5rem" />
+      <InputGroup maxW="xs" size="sm">
+        <InputLeftElement pointerEvents="none">
+          <Icon as={MdSearch} color="blackAlpha.600" fontSize="1.2em" />
+        </InputLeftElement>
         <Input
           rounded="full"
           border={0}
@@ -21,7 +45,7 @@ function Header() {
           type="search"
           placeholder="Filter by name"
           _placeholder={{
-            color: 'blackAlpha.500',
+            color: 'blackAlpha.400',
           }}
         />
       </InputGroup>
@@ -32,11 +56,20 @@ function Header() {
 type PersonCardProps = {
   name: string;
   organizationName: string;
+  onClick: () => void;
 };
 
-function PersonCard({ name, organizationName }: PersonCardProps) {
+function PersonCard({ name, organizationName, onClick }: PersonCardProps) {
   return (
-    <Flex justifyContent="space-between" alignItems="center" borderWidth="1px" borderColor="grey.500" py={2} px={4}>
+    <Flex
+      justifyContent="space-between"
+      alignItems="center"
+      borderWidth="1px"
+      borderColor="grey.500"
+      py={2}
+      px={4}
+      onClick={onClick}
+    >
       <Box>
         <Text fontSize="sm" color="blackAlpha.700" fontWeight="bold" lineHeight="short">
           {name}
@@ -56,13 +89,17 @@ type PersonListProps = {
 };
 
 function PersonList({ persons }: PersonListProps) {
+  const { isOpen: isDetailOpen, onOpen: onDetailOpen, onClose: onDetailClose } = useDisclosure();
   return (
-    <VStack spacing={4} align="stretch" p="4">
-      {persons.map((person: Person) => {
-        const { id, name, org_name: orgName } = person;
-        return <PersonCard key={id} name={name} organizationName={orgName} />;
-      })}
-    </VStack>
+    <>
+      <PersonDetailModal isDetailOpen={isDetailOpen} onDetailClose={onDetailClose} />
+      <VStack spacing={4} align="stretch" px="4" py="20">
+        {persons.map((person: Person) => {
+          const { id, name, org_name: orgName } = person;
+          return <PersonCard key={id} name={name} organizationName={orgName} onClick={onDetailOpen} />;
+        })}
+      </VStack>
+    </>
   );
 }
 
@@ -70,7 +107,7 @@ function Persons() {
   const { data } = useQuery(['persons'], PersonService.getAll);
 
   return (
-    <Box>
+    <Box w="full">
       <Header />
       {data && <PersonList persons={data?.data} />}
     </Box>
