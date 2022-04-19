@@ -29,6 +29,7 @@
         "printWidth": 120
       }
     ],
+    "camelcase": ["error", { "properties": "never", "ignoreDestructuring": true }],
     // Solves: Missing file extension ‘tsx’
     "import/extensions": [
       "error",

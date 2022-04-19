@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { ChakraProvider, CSSReset, extendTheme } from '@chakra-ui/react';
 import Layout from './components/Layout';
-import PersonsList from './features/persons/personsList';
+import Persons from './features/persons/personsList';
 
 const queryClient = new QueryClient();
 
@@ -21,7 +21,7 @@ function App() {
       <ChakraProvider theme={theme}>
         <CSSReset />
         <Layout>
-          <PersonsList />
+          <Persons />
         </Layout>
         <ReactQueryDevtools initialIsOpen={false} />
       </ChakraProvider>
