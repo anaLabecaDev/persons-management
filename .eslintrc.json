@@ -44,7 +44,12 @@
     "import/no-extraneous-dependencies": [
       "error",
       {
-        "devDependencies": ["**/*.test.{ts,tsx}", "**/{test,mockServer}/*.{ts,tsx}", "**/*.stories.{ts,tsx}"]
+        "devDependencies": [
+          "**/*.test.{ts,tsx}",
+          "**/{test,mockServer}/*.{ts,tsx}",
+          "**/*.stories.{ts,tsx}",
+          "**/mocks/**"
+        ]
       }
     ],
     "import/prefer-default-export": "off",
