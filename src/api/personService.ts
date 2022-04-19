@@ -1,5 +1,5 @@
 import apiClient from './api';
-import { PersonsResponse } from './types';
+import { PersonByIdResponse, PersonsResponse } from './types';
 
 const getAll = async () => {
   const response = await apiClient.get<PersonsResponse>('/persons', { params: { limit: 20 } });
@@ -7,12 +7,14 @@ const getAll = async () => {
 };
 
 const getById = async (id: string) => {
-  const response = await apiClient.get(`/persons/${id}`);
+  const response = await apiClient.get<PersonByIdResponse>(`/persons/${id}`);
   return response.data;
 };
 
 const search = async (query: string) => {
-  const response = await apiClient.get('/persons/search', { params: { term: query, fields: ['name'], limit: 20 } });
+  const response = await apiClient.get<PersonsResponse>('/persons/search', {
+    params: { term: query, fields: ['name'], limit: 20 },
+  });
   return response.data;
 };
 

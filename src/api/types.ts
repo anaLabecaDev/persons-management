@@ -95,11 +95,20 @@ export interface Person {
   org_name: string;
   owner_name: string;
   cc_email: string;
+  '73d17c3f4d3c8a3856179466873d81a19b931b68': string;
+  a4329aa33eb3484ce969c8ea9955d7c6a3d2b954: string;
 }
 
 export interface PersonsResponse {
   success: boolean;
   data: Person[];
+  additional_data: AdditionalData;
+  related_objects: Record<string, object>;
+}
+
+export interface PersonByIdResponse {
+  success: boolean;
+  data: Person;
   additional_data: AdditionalData;
   related_objects: Record<string, object>;
 }

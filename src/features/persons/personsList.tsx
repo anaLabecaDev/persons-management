@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 import {
   Avatar,
@@ -54,12 +54,13 @@ function Header() {
 }
 
 type PersonCardProps = {
+  id: number;
   name: string;
   organizationName: string;
-  onClick: () => void;
+  onClick: (personId: number) => void;
 };
 
-function PersonCard({ name, organizationName, onClick }: PersonCardProps) {
+function PersonCard({ name, organizationName, onClick, id }: PersonCardProps) {
   return (
     <Flex
       justifyContent="space-between"
@@ -68,7 +69,7 @@ function PersonCard({ name, organizationName, onClick }: PersonCardProps) {
       borderColor="grey.500"
       py={2}
       px={4}
-      onClick={onClick}
+      onClick={() => onClick(id)}
     >
       <Box>
         <Text fontSize="sm" color="blackAlpha.700" fontWeight="bold" lineHeight="short">
@@ -89,14 +90,23 @@ type PersonListProps = {
 };
 
 function PersonList({ persons }: PersonListProps) {
+  // TODO: Improve this solution to open info modal
+  const [selectedPerson, setSelectedPerson] = useState<number | null>();
   const { isOpen: isDetailOpen, onOpen: onDetailOpen, onClose: onDetailClose } = useDisclosure();
+
+  const onPersonClick = (personId: number) => {
+    setSelectedPerson(personId);
+    onDetailOpen();
+  };
   return (
     <>
-      <PersonDetailModal isDetailOpen={isDetailOpen} onDetailClose={onDetailClose} />
+      {selectedPerson && (
+        <PersonDetailModal isDetailOpen={isDetailOpen} onDetailClose={onDetailClose} personId={selectedPerson} />
+      )}
       <VStack spacing={4} align="stretch" px="4" py="20">
         {persons.map((person: Person) => {
           const { id, name, org_name: orgName } = person;
-          return <PersonCard key={id} name={name} organizationName={orgName} onClick={onDetailOpen} />;
+          return <PersonCard key={id} id={id} name={name} organizationName={orgName} onClick={onPersonClick} />;
         })}
       </VStack>
     </>
