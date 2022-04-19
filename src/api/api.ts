@@ -1,7 +1,6 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 
 const onRequest = (config: AxiosRequestConfig): AxiosRequestConfig => {
-  console.info(`[request] [${JSON.stringify(config)}]`);
   // eslint-disable-next-line no-param-reassign
   config.params = {
     api_token: `${process.env.REACT_APP_API_KEY}`,
@@ -10,20 +9,11 @@ const onRequest = (config: AxiosRequestConfig): AxiosRequestConfig => {
   return config;
 };
 
-const onRequestError = (error: AxiosError): Promise<AxiosError> => {
-  console.error(`[request error] [${JSON.stringify(error)}]`);
-  return Promise.reject(error);
-};
+const onRequestError = (error: AxiosError): Promise<AxiosError> => Promise.reject(error);
 
-const onResponse = (response: AxiosResponse): AxiosResponse => {
-  console.info(`[response] [${JSON.stringify(response)}]`);
-  return response;
-};
+const onResponse = (response: AxiosResponse): AxiosResponse => response;
 
-const onResponseError = (error: AxiosError): Promise<AxiosError> => {
-  console.error(`[response error] [${JSON.stringify(error)}]`);
-  return Promise.reject(error);
-};
+const onResponseError = (error: AxiosError): Promise<AxiosError> => Promise.reject(error);
 
 export function setupInterceptorsTo(axiosInstance: AxiosInstance): AxiosInstance {
   axiosInstance.interceptors.request.use(onRequest, onRequestError);
