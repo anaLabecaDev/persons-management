@@ -1,46 +1,27 @@
-# Getting Started with Create React App
+# Persons management 👥
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+The project goal is to manage persons information that are coming from pipedrive API and allow users to see a list of persons, filter de the list by query string, add and remove persons and to see person detailed information. 
 
-## Available Scripts
+# Project set up 
 
-In the project directory, you can run:
+For security reasons and to avoid exposing sensitive data, the API_KEY and API_DOMAIN are set in a `.env` file, so to run the project locally you have to create the `.env` file and set the values as follows: 
 
-### `npm start`
+```bash
+REACT_APP_API_KEY = 'PIPEDRIVE_API_KEY'
+REACT_APP_API_DOMAIN = 'PIPEDRIVE_ACCOUNT_DOMAIN'
+```
+# Tech stack 
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- API data management :  [React-query]([https://react-query.tanstack.com/](https://react-query.tanstack.com/))
+- HTTP Client: [Axios]([https://axios-http.com/](https://axios-http.com/))
+- JS Framework : [React]([https://reactjs.org/](https://reactjs.org/))
+- Test: [Testing library]([https://testing-library.com/docs/](https://testing-library.com/docs/))
+- UI component library: [Chakra-UI]([https://chakra-ui.com/](https://chakra-ui.com/))
+- Icon library: [React-icons](https://react-icons.github.io/react-icons/)
+- Commit styling: [Devmoji](https://github.com/folke/devmoji)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+# Implementation details
 
-### `npm test`
+Since I couldn't find the exact icons used in the provided mock ups I'm using the Material Design icons available in the `react-icons` lib. 
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+Since I was not able to inspect the mock ups all UI it's an eye approximation of the provided designs.
