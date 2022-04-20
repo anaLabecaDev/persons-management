@@ -12,6 +12,8 @@ import {
   VStack,
   Icon,
   useDisclosure,
+  HStack,
+  Button,
 } from '@chakra-ui/react';
 import { MdSearch, MdDomain } from 'react-icons/md';
 import PersonService from '../../api/personService';
@@ -67,6 +69,7 @@ function PersonCard({ name, organizationName, onClick, id }: PersonCardProps) {
       py={2}
       px={4}
       onClick={() => onClick(id)}
+      shrink={0}
     >
       <Box>
         <Text fontSize="sm" color="blackAlpha.700" fontWeight="bold" lineHeight="short">
@@ -96,17 +99,21 @@ function PersonList({ persons }: PersonListProps) {
     onDetailOpen();
   };
   return (
-    <>
+    <Flex grow={1} overflow="auto" direction="column">
       {selectedPerson && (
         <PersonDetailModal isDetailOpen={isDetailOpen} onDetailClose={onDetailClose} personId={selectedPerson} />
       )}
-      <VStack spacing={4} align="stretch" px="4" py="20">
+      <VStack spacing={4} align="stretch" p="4">
         {persons.map((person: Person) => {
           const { id, name, org_name: orgName } = person;
           return <PersonCard key={id} id={id} name={name} organizationName={orgName} onClick={onPersonClick} />;
         })}
       </VStack>
-    </>
+      <HStack justify="center" spacing={4} py="4">
+        <Button variant="outline">Previous</Button>
+        <Button variant="outline">Next</Button>
+      </HStack>
+    </Flex>
   );
 }
 
@@ -148,10 +155,13 @@ function Persons() {
     : personList?.additional_data.pagination.more_items_in_collection;
 
   return (
-    <Box w="full">
+    <Flex w="full" flexDirection="column">
       <Header onSearch={handleOnSearch} searchQuery={searchQuery} />
       <PersonList persons={persons?.data ?? []} />
-    </Box>
+      <Flex bg="#ebebeb" width="100%" p={4} shrink={0} justify="flex-end">
+        <Button>Add Person</Button>
+      </Flex>
+    </Flex>
   );
 }
 

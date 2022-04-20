@@ -14,7 +14,6 @@ function Layout({ children }: ILayoutProps) {
       <Flex grow={1} overflow="auto">
         {children}
       </Flex>
-      <Flex bg="#ebebeb" width="100%" h={10} shrink={0} />
     </Flex>
   );
 }
