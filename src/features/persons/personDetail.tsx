@@ -17,9 +17,8 @@ import {
 } from '@chakra-ui/react';
 import { useQuery } from 'react-query';
 import PersonService from '../../api/personService';
-import { Person, ContactInfo } from '../../api/types';
-
-const getPrimaryValue = (contacts: ContactInfo[]) => contacts.find((contact) => contact.primary === true)?.value;
+import { Person } from '../../api/types';
+import PersonsUtils from './util';
 
 type PersonInfoProps = {
   person: Person;
@@ -42,7 +41,7 @@ function PersonInfo({ person }: PersonInfoProps) {
           {name}
         </Text>
         <Text color="green.300" fontWeight="bold">
-          {getPrimaryValue(phone)}
+          {PersonsUtils.getPrimaryValue(phone)}
         </Text>
       </Flex>
 
@@ -55,7 +54,7 @@ function PersonInfo({ person }: PersonInfoProps) {
           <ListItem>Location</ListItem>
         </List>
         <List fontSize="sm" isTruncated spacing={2} color="blackAlpha.500">
-          <ListItem>{getPrimaryValue(email)}</ListItem>
+          <ListItem>{PersonsUtils.getPrimaryValue(email)}</ListItem>
           <ListItem>{organization}</ListItem>
           <ListItem>{assistant}</ListItem>
           <ListItem>{groups}</ListItem>
