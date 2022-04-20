@@ -7,7 +7,7 @@ import {
   PersonsSearchResponse,
 } from './types';
 
-const defaultListLimit = 20;
+const defaultListLimit = 15;
 
 const getAll = async (page: number, limit = defaultListLimit) => {
   const response = await apiClient.get<PersonsResponse>('/persons', { params: { limit, start: page } });
@@ -42,6 +42,7 @@ const PersonService = {
   search,
   deletePerson,
   create,
+  defaultListLimit,
 };
 
 export default PersonService;

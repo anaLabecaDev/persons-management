@@ -1,24 +1,10 @@
 import React, { useCallback, useState } from 'react';
 import { useQuery } from 'react-query';
-import {
-  Avatar,
-  Flex,
-  Box,
-  Text,
-  Heading,
-  InputGroup,
-  InputLeftElement,
-  Input,
-  VStack,
-  Icon,
-  useDisclosure,
-  HStack,
-  Button,
-} from '@chakra-ui/react';
-import { MdSearch, MdDomain } from 'react-icons/md';
+import { Flex, Heading, InputGroup, InputLeftElement, Input, Icon, Button } from '@chakra-ui/react';
+import { MdSearch } from 'react-icons/md';
 import PersonService from '../../api/personService';
 import { Items, Person, PersonsSearchResponse } from '../../api/types';
-import PersonDetailModal from './personDetail';
+import List from './list';
 
 type HeaderProps = {
   searchQuery: string;
@@ -52,67 +38,10 @@ function Header({ searchQuery, onSearch }: HeaderProps) {
   );
 }
 
-type PersonCardProps = {
-  id: number;
-  name: string;
-  organizationName: string;
-  onClick: (personId: number) => void;
-};
-
-function PersonCard({ name, organizationName, onClick, id }: PersonCardProps) {
+function Footer() {
   return (
-    <Flex
-      justifyContent="space-between"
-      alignItems="center"
-      borderWidth="1px"
-      borderColor="grey.500"
-      py={2}
-      px={4}
-      onClick={() => onClick(id)}
-      shrink={0}
-    >
-      <Box>
-        <Text fontSize="sm" color="blackAlpha.700" fontWeight="bold" lineHeight="short">
-          {name}
-        </Text>
-        <Text fontSize="xs" color="blackAlpha.500">
-          <Icon as={MdDomain} mr={1} />
-          {organizationName}
-        </Text>
-      </Box>
-      <Avatar bg="blue.100" color="blue.400" name={name} />
-    </Flex>
-  );
-}
-
-type PersonListProps = {
-  persons: Person[];
-};
-
-function PersonList({ persons }: PersonListProps) {
-  // TODO: Improve this solution to open info modal (maybe useRef is better)
-  const [selectedPerson, setSelectedPerson] = useState<number | null>();
-  const { isOpen: isDetailOpen, onOpen: onDetailOpen, onClose: onDetailClose } = useDisclosure();
-
-  const onPersonClick = (personId: number) => {
-    setSelectedPerson(personId);
-    onDetailOpen();
-  };
-  return (
-    <Flex grow={1} overflow="auto" direction="column">
-      {selectedPerson && (
-        <PersonDetailModal isDetailOpen={isDetailOpen} onDetailClose={onDetailClose} personId={selectedPerson} />
-      )}
-      <VStack spacing={4} align="stretch" p="4">
-        {persons.map((person: Person) => {
-          const { id, name, org_name: orgName } = person;
-          return <PersonCard key={id} id={id} name={name} organizationName={orgName} onClick={onPersonClick} />;
-        })}
-      </VStack>
-      <HStack justify="center" spacing={4} py="4">
-        <Button variant="outline">Previous</Button>
-        <Button variant="outline">Next</Button>
-      </HStack>
+    <Flex bg="#ebebeb" width="100%" p={4} shrink={0} justify="flex-end">
+      <Button>Add Person</Button>
     </Flex>
   );
 }
@@ -120,7 +49,7 @@ function PersonList({ persons }: PersonListProps) {
 function Persons() {
   const [currentPage, setCurrentPage] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
-  const isSearchEnabled = searchQuery.length > 2;
+  const isSearchEnabled = searchQuery.length >= 2;
 
   const { data: personList } = useQuery(
     ['persons', searchQuery, currentPage],
@@ -145,22 +74,39 @@ function Persons() {
     }
   );
 
+  const persons = isSearchEnabled ? searchResult : personList;
+
   const handleOnSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(event.target.value);
+    const { value } = event.target;
+    setSearchQuery(value);
+    if (value.length >= 2) {
+      setCurrentPage(0);
+    }
   };
 
-  const persons = isSearchEnabled ? searchResult : personList;
   const hasMoreItems = searchResult
     ? searchResult.additional_data.pagination.more_items_in_collection
     : personList?.additional_data.pagination.more_items_in_collection;
 
+  const handleOnPreviousPage = () => {
+    setCurrentPage((prevPageState) => prevPageState - PersonService.defaultListLimit);
+  };
+
+  const handleOnNextPage = () => {
+    setCurrentPage((prevPageState) => prevPageState + PersonService.defaultListLimit);
+  };
+
   return (
     <Flex w="full" flexDirection="column">
       <Header onSearch={handleOnSearch} searchQuery={searchQuery} />
-      <PersonList persons={persons?.data ?? []} />
-      <Flex bg="#ebebeb" width="100%" p={4} shrink={0} justify="flex-end">
-        <Button>Add Person</Button>
-      </Flex>
+      <List
+        persons={persons?.data ?? []}
+        currentPage={currentPage}
+        hasMore={hasMoreItems ?? false}
+        onNextPage={handleOnNextPage}
+        onPreviousPage={handleOnPreviousPage}
+      />
+      <Footer />
     </Flex>
   );
 }
