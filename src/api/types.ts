@@ -106,9 +106,33 @@ export interface PersonsResponse {
   related_objects: Record<string, object>;
 }
 
+export interface Items {
+  result_score: number;
+  item: Person;
+}
+
+export interface PersonsSearchResponse {
+  success: boolean;
+  data: { items: Items[] };
+  additional_data: AdditionalData;
+}
+
 export interface PersonByIdResponse {
   success: boolean;
   data: Person;
   additional_data: AdditionalData;
   related_objects: Record<string, object>;
+}
+
+export interface DeletePersonResponse {
+  success: boolean;
+  data: { id: number };
+}
+
+export interface CreatePersonRequest {
+  name: string;
+  email?: ContactInfo[];
+  phone?: ContactInfo[];
+  '73d17c3f4d3c8a3856179466873d81a19b931b68'?: string;
+  a4329aa33eb3484ce969c8ea9955d7c6a3d2b954?: string;
 }
