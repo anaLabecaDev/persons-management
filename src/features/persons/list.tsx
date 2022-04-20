@@ -3,15 +3,17 @@ import { Avatar, Box, Button, Flex, HStack, Icon, Text, useDisclosure, VStack } 
 import { MdDomain } from 'react-icons/md';
 import { Person } from '../../api/types';
 import PersonDetailModal from './personDetail';
+import DeleteWarning from './deleteWarning';
 
 type PersonCardProps = {
   id: number;
   name: string;
   organizationName: string;
   onClick: (personId: number) => void;
+  onDeleteClick: (personId: number) => void;
 };
 
-function PersonCard({ name, organizationName, onClick, id }: PersonCardProps) {
+function PersonCard({ name, organizationName, onClick, onDeleteClick, id }: PersonCardProps) {
   return (
     <Flex
       justifyContent="space-between"
@@ -20,7 +22,10 @@ function PersonCard({ name, organizationName, onClick, id }: PersonCardProps) {
       borderColor="grey.500"
       py={2}
       px={4}
-      onClick={() => onClick(id)}
+      onClick={(event: React.SyntheticEvent<HTMLDivElement>) => {
+        event.stopPropagation();
+        onClick(id);
+      }}
       shrink={0}
     >
       <Box>
@@ -32,7 +37,18 @@ function PersonCard({ name, organizationName, onClick, id }: PersonCardProps) {
           {organizationName ?? '--'}
         </Text>
       </Box>
-      <Avatar bg="blue.100" color="blue.400" name={name} />
+      <HStack justify="center" spacing={4} py="4">
+        <Avatar bg="blue.100" color="blue.400" name={name} />
+        <Button
+          colorScheme="red"
+          onClick={(event: React.SyntheticEvent<HTMLButtonElement>) => {
+            event.stopPropagation();
+            onDeleteClick(id);
+          }}
+        >
+          Delete
+        </Button>
+      </HStack>
     </Flex>
   );
 }
@@ -46,24 +62,45 @@ type ListProps = {
 };
 
 function List({ persons, onPreviousPage, onNextPage, currentPage, hasMore }: ListProps) {
-  // TODO: Improve this solution to open info modal (maybe useRef is better)
   const [selectedPerson, setSelectedPerson] = useState<number | null>();
   const { isOpen: isDetailOpen, onOpen: onDetailOpen, onClose: onDetailClose } = useDisclosure();
+  const { isOpen: isDeleteAlertOpen, onOpen: onDeleteAlertOpen, onClose: onDeleteAlertClose } = useDisclosure();
 
   const onPersonClick = (personId: number) => {
     setSelectedPerson(personId);
     onDetailOpen();
   };
 
+  const handleDeleteClick = (personId: number) => {
+    setSelectedPerson(personId);
+    onDeleteAlertOpen();
+  };
+
   return (
     <Flex grow={1} overflow="auto" direction="column">
       {selectedPerson && (
-        <PersonDetailModal isDetailOpen={isDetailOpen} onDetailClose={onDetailClose} personId={selectedPerson} />
+        <>
+          <PersonDetailModal isDetailOpen={isDetailOpen} onDetailClose={onDetailClose} personId={selectedPerson} />
+          <DeleteWarning
+            isDeleteWarningOpen={isDeleteAlertOpen}
+            onDeleteWarningClose={onDeleteAlertClose}
+            personId={selectedPerson}
+          />
+        </>
       )}
       <VStack spacing={4} align="stretch" p="4">
         {persons.map((person: Person) => {
           const { id, name, org_name: orgName } = person;
-          return <PersonCard key={id} id={id} name={name} organizationName={orgName} onClick={onPersonClick} />;
+          return (
+            <PersonCard
+              key={id}
+              id={id}
+              name={name}
+              organizationName={orgName}
+              onClick={onPersonClick}
+              onDeleteClick={handleDeleteClick}
+            />
+          );
         })}
       </VStack>
       <HStack justify="center" spacing={4} py="4">

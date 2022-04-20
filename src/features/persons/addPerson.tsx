@@ -34,14 +34,13 @@ function AddPersonModal({ isAddPersonOpen, onAddPersonClose }: AddPersonModalPro
   const addPerson = useMutation((person: CreatePersonPayload) => PersonService.create(person), {
     onSuccess: () => {
       onAddPersonClose();
-      queryClient.invalidateQueries(['persons']);
+      queryClient.invalidateQueries(['persons', 'searchPersons']);
     },
   });
 
   useEffect(() => {
     const isNameValid = personForm.name !== '';
     const isEmailValid = personForm.email ? PersonsUtils.isFieldValid(personForm.email, EMAIL_REGEX) : true;
-    console.log('isNameValid', isNameValid);
 
     setIsPersonEmailValid(isEmailValid);
     setIsPersonNameValid(isNameValid);
@@ -95,7 +94,7 @@ function AddPersonModal({ isAddPersonOpen, onAddPersonClose }: AddPersonModalPro
                 placeholder="your-email@example.com"
                 onChange={onFieldChange}
               />
-              {!isPersonEmailValid && <FormErrorMessage>A Name is required.</FormErrorMessage>}
+              {!isPersonEmailValid && <FormErrorMessage>Email format is incorrect.</FormErrorMessage>}
             </FormControl>
             <FormControl>
               <FormLabel htmlFor="phone" fontWeight="bold">
