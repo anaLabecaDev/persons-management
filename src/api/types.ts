@@ -136,3 +136,11 @@ export interface CreatePersonRequest {
   '73d17c3f4d3c8a3856179466873d81a19b931b68'?: string;
   a4329aa33eb3484ce969c8ea9955d7c6a3d2b954?: string;
 }
+
+export interface CreatePersonPayload {
+  name: string;
+  email?: string;
+  phone?: string;
+  groups?: string;
+  assistant?: string;
+}

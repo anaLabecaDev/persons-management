@@ -1,5 +1,6 @@
 import apiClient from './api';
 import {
+  CreatePersonPayload,
   CreatePersonRequest,
   DeletePersonResponse,
   PersonByIdResponse,
@@ -31,7 +32,31 @@ const deletePerson = async (id: number) => {
   return response.data;
 };
 
-const create = async (personData: CreatePersonRequest) => {
+const create = async (personPayload: CreatePersonPayload) => {
+  const personData: CreatePersonRequest = {
+    name: personPayload.name,
+    ...(personPayload.email && {
+      email: [
+        {
+          value: personPayload.email,
+          primary: true,
+          label: 'email',
+        },
+      ],
+    }),
+    ...(personPayload.phone && {
+      phone: [
+        {
+          value: personPayload.phone,
+          primary: true,
+          label: 'email',
+        },
+      ],
+    }),
+    ...(personPayload.assistant && { '73d17c3f4d3c8a3856179466873d81a19b931b68': personPayload.assistant }),
+    ...(personPayload.groups && { a4329aa33eb3484ce969c8ea9955d7c6a3d2b954: personPayload.groups }),
+  };
+
   const response = await apiClient.post<PersonByIdResponse>('/persons', personData);
   return response.data;
 };

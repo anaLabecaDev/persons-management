@@ -1,10 +1,11 @@
 import React, { useCallback, useState } from 'react';
 import { useQuery } from 'react-query';
-import { Flex, Heading, InputGroup, InputLeftElement, Input, Icon, Button } from '@chakra-ui/react';
+import { Flex, Heading, InputGroup, InputLeftElement, Input, Icon, Button, useDisclosure } from '@chakra-ui/react';
 import { MdSearch } from 'react-icons/md';
 import PersonService from '../../api/personService';
 import { Items, Person, PersonsSearchResponse } from '../../api/types';
 import List from './list';
+import AddPersonModal from './addPerson';
 
 type HeaderProps = {
   searchQuery: string;
@@ -38,20 +39,25 @@ function Header({ searchQuery, onSearch }: HeaderProps) {
   );
 }
 
-function Footer() {
+type FooterProps = {
+  onAddPersonClick: () => void;
+};
+
+function Footer({ onAddPersonClick }: FooterProps) {
   return (
     <Flex bg="#ebebeb" width="100%" p={4} shrink={0} justify="flex-end">
-      <Button>Add Person</Button>
+      <Button onClick={onAddPersonClick}>Add Person</Button>
     </Flex>
   );
 }
 
 function Persons() {
+  const { isOpen: isAddPersonOpen, onOpen: onAddPersonOpen, onClose: onAddPersonClose } = useDisclosure();
   const [currentPage, setCurrentPage] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
   const isSearchEnabled = searchQuery.length >= 2;
 
-  const { data: personList } = useQuery(
+  const { data: personList, isLoading } = useQuery(
     ['persons', searchQuery, currentPage],
     async () => PersonService.getAll(currentPage),
     {
@@ -99,6 +105,7 @@ function Persons() {
   return (
     <Flex w="full" flexDirection="column">
       <Header onSearch={handleOnSearch} searchQuery={searchQuery} />
+
       <List
         persons={persons?.data ?? []}
         currentPage={currentPage}
@@ -106,7 +113,9 @@ function Persons() {
         onNextPage={handleOnNextPage}
         onPreviousPage={handleOnPreviousPage}
       />
-      <Footer />
+
+      <Footer onAddPersonClick={onAddPersonOpen} />
+      <AddPersonModal onAddPersonClose={onAddPersonClose} isAddPersonOpen={isAddPersonOpen} />
     </Flex>
   );
 }

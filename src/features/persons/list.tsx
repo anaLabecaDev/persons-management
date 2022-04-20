@@ -29,7 +29,7 @@ function PersonCard({ name, organizationName, onClick, id }: PersonCardProps) {
         </Text>
         <Text fontSize="xs" color="blackAlpha.500">
           <Icon as={MdDomain} mr={1} />
-          {organizationName}
+          {organizationName ?? '--'}
         </Text>
       </Box>
       <Avatar bg="blue.100" color="blue.400" name={name} />

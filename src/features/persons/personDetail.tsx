@@ -54,10 +54,10 @@ function PersonInfo({ person }: PersonInfoProps) {
           <ListItem>Location</ListItem>
         </List>
         <List fontSize="sm" isTruncated spacing={2} color="blackAlpha.500">
-          <ListItem>{PersonsUtils.getPrimaryValue(email)}</ListItem>
-          <ListItem>{organization}</ListItem>
-          <ListItem>{assistant}</ListItem>
-          <ListItem>{groups}</ListItem>
+          <ListItem>{PersonsUtils.getPrimaryValue(email) ?? '--'}</ListItem>
+          <ListItem>{organization ?? '--'}</ListItem>
+          <ListItem>{assistant ?? '--'}</ListItem>
+          <ListItem>{groups ?? '--'}</ListItem>
           <ListItem>Location</ListItem>
         </List>
       </SimpleGrid>
