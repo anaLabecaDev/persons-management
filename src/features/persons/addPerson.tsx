@@ -14,10 +14,9 @@ import {
   ModalBody,
   Stack,
 } from '@chakra-ui/react';
-import { useMutation, useQueryClient } from 'react-query';
 import { CreatePersonPayload } from '../../api/types';
-import PersonService from '../../api/personService';
 import PersonsUtils, { EMAIL_REGEX } from './util';
+import { useAddPerson } from './queries';
 
 type AddPersonModalProps = {
   isAddPersonOpen: boolean;
@@ -30,13 +29,7 @@ function AddPersonModal({ isAddPersonOpen, onAddPersonClose }: AddPersonModalPro
   const [isPersonEmailValid, setIsPersonEmailValid] = useState(true);
   const [isPersonFormValid, setIsPersonFormValid] = useState(false);
 
-  const queryClient = useQueryClient();
-  const addPerson = useMutation((person: CreatePersonPayload) => PersonService.create(person), {
-    onSuccess: () => {
-      onAddPersonClose();
-      queryClient.invalidateQueries(['persons', 'searchPersons']);
-    },
-  });
+  const addPerson = useAddPerson();
 
   useEffect(() => {
     const isNameValid = personForm.name !== '';
@@ -54,7 +47,7 @@ function AddPersonModal({ isAddPersonOpen, onAddPersonClose }: AddPersonModalPro
 
   const handleSubmit = () => {
     if (isPersonFormValid && personForm) {
-      addPerson.mutate(personForm);
+      addPerson.mutate(personForm, { onSuccess: () => onAddPersonClose() });
     }
   };
 

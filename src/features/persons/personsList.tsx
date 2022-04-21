@@ -1,6 +1,17 @@
 import React, { useCallback, useState } from 'react';
 import { useQuery } from 'react-query';
-import { Flex, Heading, InputGroup, InputLeftElement, Input, Icon, Button, useDisclosure } from '@chakra-ui/react';
+import {
+  Flex,
+  Heading,
+  InputGroup,
+  InputLeftElement,
+  Input,
+  Icon,
+  Button,
+  useDisclosure,
+  Spinner,
+  Center,
+} from '@chakra-ui/react';
 import { MdSearch } from 'react-icons/md';
 import PersonService from '../../api/personService';
 import { Items, Person, PersonsSearchResponse } from '../../api/types';
@@ -57,7 +68,7 @@ function Persons() {
   const [searchQuery, setSearchQuery] = useState('');
   const isSearchEnabled = searchQuery.length >= 2;
 
-  const { data: personList, isLoading } = useQuery(
+  const { data: personList, isLoading: isPersonListLoading } = useQuery(
     ['persons', searchQuery, currentPage],
     async () => PersonService.getAll(currentPage),
     {
@@ -65,7 +76,7 @@ function Persons() {
     }
   );
 
-  const { data: searchResult } = useQuery(
+  const { data: searchResult, isLoading: isSearchLoading } = useQuery(
     ['search', searchQuery, currentPage],
     async () => PersonService.search(searchQuery, currentPage),
     {
@@ -81,6 +92,7 @@ function Persons() {
   );
 
   const persons = isSearchEnabled ? searchResult : personList;
+  const isLoading = isSearchEnabled ? isSearchLoading : isPersonListLoading;
 
   const handleOnSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -105,14 +117,19 @@ function Persons() {
   return (
     <Flex w="full" flexDirection="column">
       <Header onSearch={handleOnSearch} searchQuery={searchQuery} />
-
-      <List
-        persons={persons?.data ?? []}
-        currentPage={currentPage}
-        hasMore={hasMoreItems ?? false}
-        onNextPage={handleOnNextPage}
-        onPreviousPage={handleOnPreviousPage}
-      />
+      {isLoading ? (
+        <Center flex={1}>
+          <Spinner thickness="6px" speed="0.65s" emptyColor="gray.200" color="blue.500" size="xl" />
+        </Center>
+      ) : (
+        <List
+          persons={persons?.data ?? []}
+          currentPage={currentPage}
+          hasMore={hasMoreItems ?? false}
+          onNextPage={handleOnNextPage}
+          onPreviousPage={handleOnPreviousPage}
+        />
+      )}
 
       <Footer onAddPersonClick={onAddPersonOpen} />
       <AddPersonModal onAddPersonClose={onAddPersonClose} isAddPersonOpen={isAddPersonOpen} />

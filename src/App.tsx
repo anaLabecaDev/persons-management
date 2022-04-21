@@ -1,7 +1,6 @@
 import React from 'react';
 import '@fontsource/open-sans/variable.css';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { ReactQueryDevtools } from 'react-query/devtools';
 import { ChakraProvider, CSSReset, extendTheme } from '@chakra-ui/react';
 import Layout from './components/Layout';
 import Persons from './features/persons/personsList';
@@ -23,7 +22,6 @@ function App() {
         <Layout>
           <Persons />
         </Layout>
-        <ReactQueryDevtools initialIsOpen={false} />
       </ChakraProvider>
     </QueryClientProvider>
   );

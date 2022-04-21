@@ -6,10 +6,13 @@ import {
   AlertDialogHeader,
   AlertDialogBody,
   AlertDialogFooter,
+  Text,
   Button,
+  Icon,
+  Flex,
 } from '@chakra-ui/react';
-import { useMutation, useQueryClient } from 'react-query';
-import PersonService from '../../api/personService';
+import { MdOutlineWarning } from 'react-icons/md';
+import { useDeletePerson } from './queries';
 
 type DeleteWarningProps = {
   personId: number;
@@ -19,18 +22,12 @@ type DeleteWarningProps = {
 
 function DeleteWarning({ personId, isDeleteWarningOpen, onDeleteWarningClose }: DeleteWarningProps) {
   const cancelRef = useRef<HTMLButtonElement>(null);
-  const queryClient = useQueryClient();
 
-  const deletePerson = useMutation((id: number) => PersonService.deletePerson(id), {
-    onSuccess: () => {
-      onDeleteWarningClose();
-      queryClient.invalidateQueries(['persons', 'searchPersons']);
-    },
-  });
+  const deletePerson = useDeletePerson();
 
   const handleOnDelete = () => {
     if (personId) {
-      deletePerson.mutate(personId);
+      deletePerson.mutate(personId, { onSuccess: () => onDeleteWarningClose() });
     }
   };
 
@@ -42,7 +39,14 @@ function DeleteWarning({ personId, isDeleteWarningOpen, onDeleteWarningClose }: 
             Delete Customer
           </AlertDialogHeader>
 
-          <AlertDialogBody>Are you sure? You can&apos;t undo this action afterwards.</AlertDialogBody>
+          <AlertDialogBody>
+            <Flex direction="column" align="center" justify="center" p="8">
+              <Icon as={MdOutlineWarning} color="red.500" w="32" h="32" />
+              <Text textAlign="center" fontSize="md" fontWeight="bold" p={2}>
+                Are you sure? You can&apos;t undo this action afterwards.
+              </Text>
+            </Flex>
+          </AlertDialogBody>
 
           <AlertDialogFooter borderTopWidth="1px" borderTopColor="grey.500" bg="blackAlpha.100">
             <Button borderRadius="unset" bg="white" ref={cancelRef} onClick={onDeleteWarningClose}>

@@ -1,6 +1,18 @@
 import React, { useState } from 'react';
-import { Avatar, Box, Button, Flex, HStack, Icon, Text, useDisclosure, VStack } from '@chakra-ui/react';
-import { MdDomain } from 'react-icons/md';
+import {
+  Avatar,
+  Box,
+  Button,
+  Flex,
+  HStack,
+  Icon,
+  IconButton,
+  Text,
+  useColorModeValue,
+  useDisclosure,
+  VStack,
+} from '@chakra-ui/react';
+import { MdOutlineDelete, MdDomain } from 'react-icons/md';
 import { Person } from '../../api/types';
 import PersonDetailModal from './personDetail';
 import DeleteWarning from './deleteWarning';
@@ -27,6 +39,7 @@ function PersonCard({ name, organizationName, onClick, onDeleteClick, id }: Pers
         onClick(id);
       }}
       shrink={0}
+      position="relative"
     >
       <Box>
         <Text fontSize="sm" color="blackAlpha.700" fontWeight="bold" lineHeight="short">
@@ -37,18 +50,24 @@ function PersonCard({ name, organizationName, onClick, onDeleteClick, id }: Pers
           {organizationName ?? '--'}
         </Text>
       </Box>
-      <HStack justify="center" spacing={4} py="4">
-        <Avatar bg="blue.100" color="blue.400" name={name} />
-        <Button
-          colorScheme="red"
-          onClick={(event: React.SyntheticEvent<HTMLButtonElement>) => {
-            event.stopPropagation();
-            onDeleteClick(id);
-          }}
-        >
-          Delete
-        </Button>
-      </HStack>
+      <Avatar bg="blue.100" color="blue.400" name={name} mr="2" />
+      <IconButton
+        icon={<MdOutlineDelete />}
+        aria-label="delete Person"
+        colorScheme="blackAlpha.700"
+        position="absolute"
+        top={0}
+        right={0}
+        size="sm"
+        _hover={{
+          color: 'red.500',
+        }}
+        variant="ghost"
+        onClick={(event: React.SyntheticEvent<HTMLButtonElement>) => {
+          event.stopPropagation();
+          onDeleteClick(id);
+        }}
+      />
     </Flex>
   );
 }
