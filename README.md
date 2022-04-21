@@ -2,6 +2,11 @@
 
 The project goal is to manage persons information that are coming from pipedrive API and allow users to see a list of persons, filter de the list by query string, add and remove persons and to see person detailed information. 
 
+### Video Example: 
+
+https://user-images.githubusercontent.com/22642886/164424975-662344c3-81d2-42b2-b162-ba05c3491da5.mov
+
+
 # Project set up 
 
 For security reasons and to avoid exposing sensitive data, the API_KEY and API_DOMAIN are set in a `.env` file, so to run the project locally you have to create the `.env` file and set the values as follows: 
@@ -51,7 +56,7 @@ In a production env we would implement the authO flow, preventing the creation o
     - Use React Virtual library to virtualize list 
 - Validate phone number format before enabling the add person API call
 - Handle errors
-- Take advantage of React query to do optimist updates
+- Take advantage of React query to do optimist updates, then list will be updated (without a need of a refech) when Adding or deleting a person
 - I've started the set up of the tests, but didn't have time to finish so:
   - Finish test configuration to mock API requests and be able to test components with data
   - Write tests for, list, search, add and delete flows 
